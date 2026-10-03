@@ -19,7 +19,8 @@ let initialized = false;
  *
  * Reads `NEXT_PUBLIC_ERRORGAP_*` env vars unless overridden by `options`. Hooks
  * `window` error / unhandledrejection and resolves stack frames through source
- * maps.
+ * maps. With `performance` (or `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`) it also
+ * measures page loads, client-side navigations, Web Vitals and API calls.
  */
 export function initErrorgapClient(options: ErrorgapNextOptions = {}): void {
   if (initialized) return;
@@ -36,6 +37,7 @@ export function initErrorgapClient(options: ErrorgapNextOptions = {}): void {
     sampleRate: config.sampleRate,
     sourceMaps: config.sourceMaps,
     captureGlobals: config.captureGlobals ?? true,
+    performance: config.performance,
   });
   initialized = true;
 }
