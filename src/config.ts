@@ -1,3 +1,5 @@
+import type { PerformanceOptions } from "@errorgap/browser";
+
 export interface ErrorgapNextOptions {
   endpoint?: string;
   projectSlug?: string;
@@ -16,6 +18,12 @@ export interface ErrorgapNextOptions {
   sourceMaps?: boolean;
   /** Install global window/process handlers. Defaults to true. */
   captureGlobals?: boolean;
+  /**
+   * Client only: measure page loads, client-side navigations, Core Web Vitals
+   * and fetch/XHR calls (Performance → Browser in Errorgap). `true` for the
+   * defaults, or options. Also enabled by `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`.
+   */
+  performance?: boolean | PerformanceOptions;
 }
 
 type Env = Record<string, string | undefined>;
@@ -57,6 +65,7 @@ export function clientConfig(options: ErrorgapNextOptions = {}): ErrorgapNextOpt
     sampleRate: options.sampleRate,
     sourceMaps: options.sourceMaps,
     captureGlobals: options.captureGlobals,
+    performance: options.performance ?? process.env.NEXT_PUBLIC_ERRORGAP_PERFORMANCE === "true",
   };
 }
 

@@ -35,3 +35,16 @@ describe("clientConfig", () => {
     expect(config.projectSlug).toBe("demo");
   });
 });
+
+describe("clientConfig performance", () => {
+  it("is off unless asked for", () => {
+    expect(clientConfig().performance).toBe(false);
+  });
+
+  it("turns on from NEXT_PUBLIC_ERRORGAP_PERFORMANCE or an explicit option", () => {
+    process.env.NEXT_PUBLIC_ERRORGAP_PERFORMANCE = "true";
+    expect(clientConfig().performance).toBe(true);
+    const routeName = () => "/orders/[id]";
+    expect(clientConfig({ performance: { routeName } }).performance).toEqual({ routeName });
+  });
+});

@@ -52,6 +52,19 @@ initErrorgapClient();
 This hooks `window` errors and unhandled rejections with source-map-resolved
 stack traces.
 
+### Browser performance
+
+Turn on page-load, client-side navigation, Core Web Vitals and API-call timing
+(Errorgap → Performance → Browser) with `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`,
+or in code:
+
+```ts
+initErrorgapClient({ performance: { sampleRate: 0.25 } });
+```
+
+Routes are grouped by path with ids templated (`/orders/123` → `/orders/:id`);
+pass `performance: { routeName }` to name them yourself.
+
 ### React render errors — `error.tsx` / `global-error.tsx`
 
 App Router error boundaries catch render errors that never reach
