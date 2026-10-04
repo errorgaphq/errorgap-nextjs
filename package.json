@@ -1,6 +1,6 @@
 {
   "name": "@errorgap/nextjs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Next.js SDK for Errorgap error tracking (client and server).",
   "license": "MIT",
   "author": "Errorgap",
@@ -53,8 +53,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@errorgap/browser": "^0.2.0",
-    "@errorgap/node": "^0.1.2"
+    "@errorgap/browser": "^0.3.0",
+    "@errorgap/node": "^0.2.0"
   },
   "peerDependencies": {
     "next": ">=13.4",
