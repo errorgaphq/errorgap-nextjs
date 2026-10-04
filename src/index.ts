@@ -9,6 +9,7 @@ export type { NextErrorContext, NextRequestInfo } from "./context";
 export { Errorgap, VERSION };
 export { requestSpans, routeTemplate, withErrorgap, withErrorgapApi } from "./route";
 export type { RouteTrackingOptions } from "./route";
+export { withErrorgapAction, withErrorgapPage } from "./server-components";
 
 let initialized = false;
 

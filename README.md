@@ -90,8 +90,27 @@ export const GET = withErrorgap(async (request: Request, { params }: { params: P
 
 Pages Router API routes use `withErrorgapApi(handler)`. Both record the
 `x-errorgap-trace` header the browser SDK sends, so Performance → Browser links
-each API call to the server request that answered it. Server Components and
-server actions are not timed.
+each API call to the server request that answered it.
+
+Server actions and Server Component pages have their own wrappers:
+
+```ts
+// app/actions.ts
+"use server";
+import { withErrorgapAction } from "@errorgap/nextjs";
+export const placeOrder = withErrorgapAction("placeOrder", async (form: FormData) => { ... });
+
+// app/orders/[id]/page.tsx
+import { withErrorgapPage } from "@errorgap/nextjs";
+async function OrderPage({ params }: { params: Promise<{ id: string }> }) { ... }
+export default withErrorgapPage(OrderPage, "/orders/[id]");
+```
+
+Actions are grouped as `action:<name>`, pages under the route you pass. A
+page's transaction times the page function (its data fetching), not the HTML
+streamed after it; `redirect()` and `notFound()` are recorded as 307 / 404,
+not errors. Both read the trace header through `next/headers`, which the
+browser SDK sets on Next's client-navigation and server-action fetches.
 
 ### React render errors — `error.tsx` / `global-error.tsx`
 
