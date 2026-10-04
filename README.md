@@ -69,6 +69,30 @@ API calls carry an `x-errorgap-trace` header — same-origin by default, other
 origins via `performance: { tracePropagationTargets: [...] }` — so a server
 SDK that records it links each call to the server trace that answered it.
 
+### Server performance (APM) — route handlers
+
+Next.js has no request hook for route handlers, so wrap the ones you want
+timed. Set `ERRORGAP_APM=true` (or `register({ apm: true })`); each request is
+an APM transaction grouped by its route (`/api/orders/[id]`, derived from the
+params Next passes — or pass `{ route }`), and errors it throws link to it
+through `onRequestError`.
+
+```ts
+// app/api/orders/[id]/route.ts
+import { withErrorgap, requestSpans } from "@errorgap/nextjs";
+
+export const GET = withErrorgap(async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  // requestSpans(request)?.database("SELECT * FROM orders WHERE id = $1", ms);
+  return Response.json(await loadOrder(id));
+});
+```
+
+Pages Router API routes use `withErrorgapApi(handler)`. Both record the
+`x-errorgap-trace` header the browser SDK sends, so Performance → Browser links
+each API call to the server request that answered it. Server Components and
+server actions are not timed.
+
 ### React render errors — `error.tsx` / `global-error.tsx`
 
 App Router error boundaries catch render errors that never reach
