@@ -24,6 +24,13 @@ export interface ErrorgapNextOptions {
    * defaults, or options. Also enabled by `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`.
    */
   performance?: boolean | PerformanceOptions;
+  /**
+   * Server only: send APM transactions for handlers wrapped with
+   * `withErrorgap` / `withErrorgapApi`. Also enabled by `ERRORGAP_APM=true`.
+   */
+  apm?: boolean;
+  /** Server only: fraction (0..1) of transactions sent. Defaults to 1. */
+  apmSampleRate?: number;
 }
 
 type Env = Record<string, string | undefined>;
@@ -44,6 +51,8 @@ export function serverConfig(options: ErrorgapNextOptions = {}): ErrorgapNextOpt
     release: options.release ?? e.ERRORGAP_RELEASE,
     sampleRate: options.sampleRate,
     captureGlobals: options.captureGlobals,
+    apm: options.apm ?? e.ERRORGAP_APM === "true",
+    apmSampleRate: options.apmSampleRate,
   };
 }
 

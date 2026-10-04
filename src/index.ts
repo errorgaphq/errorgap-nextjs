@@ -1,11 +1,14 @@
 import { Errorgap } from "@errorgap/node";
 import { isConfigured, serverConfig, type ErrorgapNextOptions } from "./config";
 import { requestErrorContext, type NextErrorContext, type NextRequestInfo } from "./context";
+import { transactionIdOf } from "./route";
 import { VERSION } from "./version";
 
 export type { ErrorgapNextOptions } from "./config";
 export type { NextErrorContext, NextRequestInfo } from "./context";
 export { Errorgap, VERSION };
+export { requestSpans, routeTemplate, withErrorgap, withErrorgapApi } from "./route";
+export type { RouteTrackingOptions } from "./route";
 
 let initialized = false;
 
@@ -33,6 +36,8 @@ export function register(options: ErrorgapNextOptions = {}): void {
     apiKey: config.apiKey,
     environment: config.environment,
     captureGlobals: config.captureGlobals ?? true,
+    apmEnabled: config.apm ?? false,
+    apmSampleRate: config.apmSampleRate,
   });
   initialized = true;
 }
@@ -51,6 +56,9 @@ export async function captureRequestError(
   if (!initialized) return;
 
   const { context: ctx, environment } = requestErrorContext(request, context);
+  // Errors thrown through withErrorgap link to that request's transaction.
+  const transactionId = transactionIdOf(error);
+  if (transactionId) ctx.transaction_id = transactionId;
   // Deliver synchronously: serverless functions may freeze once the response
   // is sent, so a fire-and-forget request can be dropped.
   await Errorgap.notify(error, { context: ctx, environment, sync: true });
