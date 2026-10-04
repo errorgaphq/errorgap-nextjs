@@ -68,6 +68,11 @@ export function transactionIdOf(error: unknown): string | undefined {
   return undefined;
 }
 
+/** Mark an error as raised in transaction `id`, for `onRequestError`. */
+export function tagWithTransaction(error: unknown, id: string): void {
+  tag(error, id);
+}
+
 function tag(error: unknown, id: string): void {
   if (error && typeof error === "object" && Object.isExtensible(error)) {
     try {
