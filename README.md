@@ -65,6 +65,10 @@ initErrorgapClient({ performance: { sampleRate: 0.25 } });
 Routes are grouped by path with ids templated (`/orders/123` → `/orders/:id`);
 pass `performance: { routeName }` to name them yourself.
 
+API calls carry an `x-errorgap-trace` header — same-origin by default, other
+origins via `performance: { tracePropagationTargets: [...] }` — so a server
+SDK that records it links each call to the server trace that answered it.
+
 ### React render errors — `error.tsx` / `global-error.tsx`
 
 App Router error boundaries catch render errors that never reach
