@@ -69,6 +69,20 @@ API calls carry an `x-errorgap-trace` header — same-origin by default, other
 origins via `performance: { tracePropagationTargets: [...] }` — so a server
 SDK that records it links each call to the server trace that answered it.
 
+### Session replay
+
+The client also records session replay (Errorgap → Session replay on error
+groups and incidents): a timeline of page loads, App Router navigations, failed
+API calls, errors and rage clicks, plus masked page snapshots. It follows the
+project's settings in Errorgap (**Settings → Session replay**): nothing is
+recorded while replay is off there, and a sampled share of sessions while it is
+on. Snapshots blank every form field; mark anything else to keep out with
+`data-errorgap-block` (removed) or `data-errorgap-mask` (text masked). See
+[`@errorgap/browser`](https://github.com/errorgaphq/errorgap-js#session-replay).
+
+Turn it off in this app with `NEXT_PUBLIC_ERRORGAP_REPLAY=false` or
+`initErrorgapClient({ replay: false })`.
+
 ### Server performance (APM) — route handlers
 
 Next.js has no request hook for route handlers, so wrap the ones you want

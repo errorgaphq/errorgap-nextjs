@@ -1,4 +1,4 @@
-import type { PerformanceOptions } from "@errorgap/browser";
+import type { PerformanceOptions, ReplayOptions } from "@errorgap/browser";
 
 export interface ErrorgapNextOptions {
   endpoint?: string;
@@ -24,6 +24,12 @@ export interface ErrorgapNextOptions {
    * defaults, or options. Also enabled by `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`.
    */
   performance?: boolean | PerformanceOptions;
+  /**
+   * Client only: session replay. On by default, but it records only what the
+   * project's replay settings allow (Settings → Session replay in Errorgap).
+   * `false`, or `NEXT_PUBLIC_ERRORGAP_REPLAY=false`, turns it off in this app.
+   */
+  replay?: boolean | ReplayOptions;
   /**
    * Server only: send APM transactions for handlers wrapped with
    * `withErrorgap` / `withErrorgapApi`. Also enabled by `ERRORGAP_APM=true`.
@@ -75,6 +81,7 @@ export function clientConfig(options: ErrorgapNextOptions = {}): ErrorgapNextOpt
     sourceMaps: options.sourceMaps,
     captureGlobals: options.captureGlobals,
     performance: options.performance ?? process.env.NEXT_PUBLIC_ERRORGAP_PERFORMANCE === "true",
+    replay: options.replay ?? process.env.NEXT_PUBLIC_ERRORGAP_REPLAY !== "false",
   };
 }
 

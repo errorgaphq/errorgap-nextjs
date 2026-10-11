@@ -21,6 +21,7 @@ let initialized = false;
  * `window` error / unhandledrejection and resolves stack frames through source
  * maps. With `performance` (or `NEXT_PUBLIC_ERRORGAP_PERFORMANCE=true`) it also
  * measures page loads, client-side navigations, Web Vitals and API calls.
+ * Session replay follows the project's replay settings unless `replay: false`.
  */
 export function initErrorgapClient(options: ErrorgapNextOptions = {}): void {
   if (initialized) return;
@@ -38,6 +39,7 @@ export function initErrorgapClient(options: ErrorgapNextOptions = {}): void {
     sourceMaps: config.sourceMaps,
     captureGlobals: config.captureGlobals ?? true,
     performance: config.performance,
+    replay: config.replay,
   });
   initialized = true;
 }
