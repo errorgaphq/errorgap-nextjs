@@ -48,3 +48,18 @@ describe("clientConfig performance", () => {
     expect(clientConfig({ performance: { routeName } }).performance).toEqual({ routeName });
   });
 });
+
+describe("clientConfig replay", () => {
+  it("follows the project's settings by default", () => {
+    delete process.env.NEXT_PUBLIC_ERRORGAP_REPLAY;
+    expect(clientConfig().replay).toBe(true);
+  });
+
+  it("turns off from NEXT_PUBLIC_ERRORGAP_REPLAY=false or an explicit option", () => {
+    process.env.NEXT_PUBLIC_ERRORGAP_REPLAY = "false";
+    expect(clientConfig().replay).toBe(false);
+    delete process.env.NEXT_PUBLIC_ERRORGAP_REPLAY;
+    expect(clientConfig({ replay: false }).replay).toBe(false);
+    expect(clientConfig({ replay: { flushIntervalMs: 5000 } }).replay).toEqual({ flushIntervalMs: 5000 });
+  });
+});
