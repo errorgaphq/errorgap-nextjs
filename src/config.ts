@@ -1,4 +1,4 @@
-import type { PerformanceOptions, ReplayOptions } from "@errorgap/browser";
+import type { BeforeNotify, FilterKey, PerformanceOptions, ReplayOptions } from "@errorgap/browser";
 
 export interface ErrorgapNextOptions {
   endpoint?: string;
@@ -37,6 +37,24 @@ export interface ErrorgapNextOptions {
   apm?: boolean;
   /** Server only: fraction (0..1) of transactions sent. Defaults to 1. */
   apmSampleRate?: number;
+  /** Environments in which nothing is sent. */
+  ignoreEnvironments?: string[];
+  /** Substrings or regexps; matching keys are masked at any depth. */
+  filterKeys?: FilterKey[];
+  /** Change a notice before it is sent, or return `false` to drop it. */
+  beforeNotify?: BeforeNotify;
+  /**
+   * Client only: drop cross-origin `Script error.`, browser-extension errors
+   * and `ResizeObserver loop` notices. Defaults to true.
+   */
+  ignoreNoise?: boolean;
+  /** Client only: an identical error is sent at most once in this window. Defaults to 1000 ms. */
+  dedupeWindowMs?: number;
+  /**
+   * Server only: exit the process after reporting an uncaught exception.
+   * Defaults to false: Next.js decides what happens to its own server.
+   */
+  exitOnUncaught?: boolean;
 }
 
 type Env = Record<string, string | undefined>;
@@ -57,6 +75,10 @@ export function serverConfig(options: ErrorgapNextOptions = {}): ErrorgapNextOpt
     release: options.release ?? e.ERRORGAP_RELEASE,
     sampleRate: options.sampleRate,
     captureGlobals: options.captureGlobals,
+    ignoreEnvironments: options.ignoreEnvironments,
+    filterKeys: options.filterKeys,
+    beforeNotify: options.beforeNotify,
+    exitOnUncaught: options.exitOnUncaught,
     apm: options.apm ?? e.ERRORGAP_APM === "true",
     apmSampleRate: options.apmSampleRate,
   };
@@ -80,6 +102,11 @@ export function clientConfig(options: ErrorgapNextOptions = {}): ErrorgapNextOpt
     sampleRate: options.sampleRate,
     sourceMaps: options.sourceMaps,
     captureGlobals: options.captureGlobals,
+    ignoreEnvironments: options.ignoreEnvironments,
+    filterKeys: options.filterKeys,
+    beforeNotify: options.beforeNotify,
+    ignoreNoise: options.ignoreNoise,
+    dedupeWindowMs: options.dedupeWindowMs,
     performance: options.performance ?? process.env.NEXT_PUBLIC_ERRORGAP_PERFORMANCE === "true",
     replay: options.replay ?? process.env.NEXT_PUBLIC_ERRORGAP_REPLAY !== "false",
   };

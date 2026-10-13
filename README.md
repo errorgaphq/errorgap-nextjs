@@ -156,6 +156,27 @@ import { Errorgap } from "@errorgap/nextjs";        // server
 await Errorgap.notify(error, { context: { component: "Checkout" } });
 ```
 
+## Filtering, noise and hooks
+
+Both `register(options)` and `initErrorgapClient(options)` accept:
+
+```ts
+{
+  ignoreEnvironments: ["test"],
+  filterKeys: ["password", /^ssn$/],
+  beforeNotify(notice) {
+    if (notice.errors[0]?.type === "AbortError") return false; // drop it
+  },
+}
+```
+
+In the browser, cross-origin `Script error.`, extension errors and
+`ResizeObserver loop` notices are dropped (`ignoreNoise: false` to keep them)
+and an identical error is sent at most once a second (`dedupeWindowMs`). On
+the server, uncaught exceptions are reported and the exit is left to Next.js
+(`exitOnUncaught: true` to exit after reporting). The server release defaults
+to `ERRORGAP_RELEASE`, `VERCEL_GIT_COMMIT_SHA` or the git checkout.
+
 ## Notes
 
 - Server capture targets the **Node.js runtime**; it no-ops on the Edge runtime.
