@@ -38,6 +38,11 @@ export function initErrorgapClient(options: ErrorgapNextOptions = {}): void {
     sampleRate: config.sampleRate,
     sourceMaps: config.sourceMaps,
     captureGlobals: config.captureGlobals ?? true,
+    ignoreEnvironments: config.ignoreEnvironments,
+    filterKeys: config.filterKeys,
+    beforeNotify: config.beforeNotify,
+    ignoreNoise: config.ignoreNoise,
+    dedupeWindowMs: config.dedupeWindowMs,
     performance: config.performance,
     replay: config.replay,
   });

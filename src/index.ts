@@ -36,7 +36,14 @@ export function register(options: ErrorgapNextOptions = {}): void {
     projectId: config.projectId,
     apiKey: config.apiKey,
     environment: config.environment,
+    release: config.release,
     captureGlobals: config.captureGlobals ?? true,
+    // Next.js owns its server process: report uncaught errors, leave the
+    // exit to it unless asked.
+    exitOnUncaught: config.exitOnUncaught ?? false,
+    ignoreEnvironments: config.ignoreEnvironments,
+    filterKeys: config.filterKeys,
+    beforeNotify: config.beforeNotify,
     apmEnabled: config.apm ?? false,
     apmSampleRate: config.apmSampleRate,
   });
